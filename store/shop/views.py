@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Category,Company,Section
 
+
 def home(request):
     category = Category.objects.all()
     company = Company.objects.all()
