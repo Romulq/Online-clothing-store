@@ -1,0 +1,121 @@
+{% extends 'shop/index.html' %}
+{% load static %}
+
+
+{% block lines %}
+
+    <!-- ##### Shop Grid Area Start ##### -->
+    <section class="shop_grid_area section-padding-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-4 col-lg-3">
+                    <div class="shop_sidebar_area">
+
+                        <!-- ##### Single Widget ##### -->
+                        <div class="widget catagory mb-50">
+                            <!-- Widget Title -->
+                            <h6 class="widget-title mb-30">Категории</h6>
+
+                            <!--  Categories  -->
+                            <div class="catagories-menu">
+
+                                <ul class="menu-content">
+                                    <!-- Single Item -->
+                                    <li data-toggle="" data-target="#{{ l.id }}">
+                                        <h6>Линейки</h6>
+                                            <ul class="sub-menu" id="{{ l.id }}">
+                                                {% for l in line %}
+                                                    <li><a href="{% url 'shop' url=l.urlProductLine %}">{{ l.nameProductLine }}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                    </li>
+                                </ul>
+
+                                {% for sec in section %}
+                                    <ul class="menu-content">
+                                        <!-- Single Item -->
+                                        <li data-toggle="" data-target="#{{ sec.id }}">
+                                            <h6 href="">{{ sec.nameSection }}</h6>
+                                                <ul class="sub-menu" id="{{ sec.id }}">
+
+                                                    {% for cat in category %}
+                                                        {% if sec.nameSection == cat.section.nameSection %}
+                                                            <li><a href="{% url 'shop' url=cat.url %}">{{ cat.nameCategory }}</a></li>
+                                                        {% endif %}
+                                                    {% endfor %}
+
+                                                </ul>
+                                        </li>
+                                    </ul>
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-12 col-md-8 col-lg-9">
+                    <div class="shop_grid_product_area">
+
+                        <!-- ##### Count Products #### -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="product-topbar d-flex align-items-center justify-content-between">
+                                    <!-- Total Products -->
+                                    <div class="total-products">
+                                        <p>Товаров найдено: <span>{{ product.count }}</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Products -->
+                        <div class="row">
+                            {% for pr in product %}
+                                <!-- Single Product -->
+                                <div class="col-12 col-sm-6 col-lg-4">
+                                    <div class="single-product-wrapper">
+                                        <!-- Product Image -->
+                                        <div class="product-img">
+                                            <img src="{{ pr.photoProduct.url }}" alt="">
+
+                                            {% if not pr.sale == 0.0 %}
+                                                <!-- Product Badge -->
+                                                <div class="product-badge offer-badge">
+                                                    <span>-{{ pr.sale }}%</span>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Product Description -->
+                                        <div class="product-description">
+                                            <span>{{ pr.productLine }}</span>
+                                            <a href="">
+                                                <h6>{{ pr }}</h6>
+                                            </a>
+                                            {% if not pr.sale == 0.0 %}
+                                                <p class="product-price"><span class="old-price">₽{{ pr.priceProduct }}</span> ₽{{ pr.price }}</p>
+                                            {% else %}
+                                                <p class="product-price">₽{{ pr.priceProduct }}</p>
+                                            {% endif %}
+
+                                            <!-- Hover Content -->
+                                            <div class="hover-content">
+                                                <div class="add-to-cart-btn">
+                                                    <a href="{% url 'detail' slug=pr.id %}" class="btn essence-btn">О товаре</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

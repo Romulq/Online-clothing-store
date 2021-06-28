@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+{% load static %}
+{% load crispy_forms_tags %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Essence - Fashion Ecommerce Template</title>
+
+    <link rel="icon" href="{% static 'shop/img/favicon.ico' %}">
+
+    <link rel="stylesheet" href="{% static 'shop/css/core-style.css' %}">
+    <link rel="stylesheet" href="{% static 'shop/css/style.css' %}">
+
+</head>
+
+<body>
+    <header class="header_area">
+        <div class="classy-nav-container breakpoint-off d-flex align-items-center justify-content-between">
+            <nav class="classy-navbar" id="essenceNav">
+                <a class="nav-brand" href="{% url 'homepage' %}"><img src="{% static 'shop/img/logo.png' %}" alt=""></a>
+                <div class="classy-navbar-toggler">
+                    <span class="navbarToggler"><span></span><span></span><span></span></span>
+                </div>
+                <div class="classy-menu">
+                    <div class="classycloseIcon">
+                        <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
+                    </div>
+                    <div class="classynav">
+                        <ul>
+                            <li><a href="#">Разделы одежды</a>
+                                <div class="megamenu">
+                                    {% for sec in section %}
+                                        <ul class="single-mega cn-col-4">
+                                            <li class="title">{{ sec.nameSection }}</li>
+                                            {% for cat in category %}
+                                                {% if cat.section.nameSection == sec.nameSection %}
+                                                    <li><a href="{% url 'shop' url=cat.url %}">{{ cat.nameCategory }}</a></li>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                    {% endfor %}
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="header-meta d-flex clearfix justify-content-end">
+                <div class="search-area">
+                    <form action="{% url 'search' %}" method="get">
+                        <input type="search" name="searched" placeholder="ПОИСК">
+                        <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+                    </form>
+                </div>
+                <div class="user-login-info">
+                    {% if not request.user.is_authenticated %}
+                        <a href="" data-toggle="modal" data-target="#autoriz" ><i class="fa fa-user-o" style="transform: scale(1.6);" aria-hidden="true"></i></a>
+                    {% endif %}
+                    {% if request.user.is_authenticated %}
+                        <a href="{% url 'sign_out' %}"><i class="fa fa-user" style="transform: scale(1.8);" aria-hidden="true"></i></a>
+                    {% endif %}
+                </div>
+                <div class="cart-area">
+                    {% if request.user.is_authenticated %}
+                        <a href="#"  id="essenceCartBtn"><i class="fa fa-shopping-cart" style="transform: scale(1.8);" aria-hidden="true"></i></a>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+
+    {% if request.user.is_authenticated %}
+        <div class="cart-bg-overlay"></div>
+
+        <div class="right-side-cart-area">
+
+        <div class="cart-button">
+            <a href="#" id="rightSideCart"><img src="{% static 'shop/img/bag.svg' %}" alt=""></a>
+        </div>
+
+        <div class="cart-content d-flex">
+
+            {% if cart %}
+                <div class="cart-list">
+
+                    {% for pr in cart.products.all %}
+                        <div class="single-cart-item">
+                            <a href="#" class="product-image">
+                                <img src="{{ pr.products.photoProduct.url }}" class="cart-thumb" alt="">
+                                <!-- Cart Item Desc -->
+                                <div class="cart-item-desc">
+                                    <span onclick="window.location.href='{% url 'del_from_cart' slug=pr.id %}'" class="product-remove"><i class="fa fa-close" aria-hidden="true"></i></span>
+                                    <span class="badge">{{ pr.products.productLine }}</span>
+                                    <h6>{{ pr.products.nameProduct }}</h6>
+                                    <p class="size">Размер: {{ pr.sizesProduct }}</p>
+                                    <p class="color">Кол-во: {{ pr.qty }}</p>
+                                    <p class="price mt-3">₽{{ pr.final_price }}</p>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+
+                <div class="cart-amount-summary">
+
+                    {% if cart.products.count == 0 %}
+                        <h2 class="mt-50">Корзина пуста!</h2>
+                    {% else %}
+
+                        <h2>О заказе</h2>
+                        <ul class="summary-table">
+                            <li><span>Итоговая цена заказа:</span> <span>₽{{ cart.totalPrice }}</span></li>
+                        </ul>
+                        <div class="checkout-btn mt-100">
+                            <a href="{% url 'checkout' %}" class="btn essence-btn">Оформить</a>
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                <strong>{{ message }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+
+
+    {% block news %}{% endblock %}
+
+
+    {% block lines %}{% endblock %}
+
+
+    {% block sales %}{% endblock %}
+
+
+    {% block slider %}{% endblock %}
+
+
+    <footer class="footer_area clearfix">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <div class="single_widget_area d-flex mb-30">
+                        <div class="footer-logo mr-50">
+                            <a href="#"><img src="{% static 'img/logo2.png' %}" alt=""></a>
+                        </div>
+                        <div class="footer_menu">
+                            <ul>
+                                <li><a href="{% url 'shop' url='all' %}">Каталог</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 ">
+                    <div class="single_widget_area mb-30">
+                        <ul class="footer_widget_menu">
+                            <li><a href="{% url 'shop' url='w_' %}">Женская одежда</a></li>
+                            <li><a href="{% url 'shop' url='cyberpunk' %}">Cyberpunk</a></li>
+                            <li><a href="{% url 'shop' url='m_' %}">Мужская одежда</a></li>
+                            <li><a href="{% url 'shop' url='sw' %}">Star Wars</a></li>
+                            <li><a href="{% url 'shop' url='u_' %}">Юнисекс одежда</a></li>
+                            <li><a href="{% url 'shop' url='samurai' %}">Samurai</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row align-items-end">
+                <!-- Single Widget Area -->
+                <div class="col-12 col-md mt-3">
+                    <div class="single_widget_area text-center">
+                        <div class="footer_social_area">
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Pinterest"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <div class="row mt-4">
+                <div class="col-md-12 mt-4 text-center">
+                    <p>
+                        Сделано с <i class="fa fa-heart-o" aria-hidden="true"></i> на <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="{% static 'shop/js/jquery-2.2.4.min.js' %}"></script>
+    <!-- Popper -->
+    <script src="{% static 'shop/js/popper.min.js' %}"></script>
+    <!-- Bootstrap -->
+    <script src="{% static 'shop/js/bootstrap.min.js' %}"></script>
+    <!-- Plugins -->
+    <script src="{% static 'shop/js/plugins.js' %}"></script>
+    <!-- Classy Nav -->
+    <script src="{% static 'shop/js/classy-nav.min.js' %}"></script>
+    <!-- Active -->
+    <script src="{% static 'shop/js/active.js' %}"></script>
+
+
+    <div class="modal" id="autoriz">
+          <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                  <div class="modal-header justify-content-md-center my-4">
+                      <h5 class="modal-title">Вход</h5>
+                  </div>
+                  <div class="modal-body mx-5 pt-1">
+                      <form  action="{% url 'sign_in'  %}" method="post">
+                          {% csrf_token %}
+                          <div class="form-group">
+                              <input name="username" class="form-control ar" placeholder="Логин">
+                          </div>
+                          <div class="form-group">
+                              <input name="password" type="password" class="form-control ar" placeholder="Пароль">
+                          </div>
+
+                          <div class="row justify-content-center text-center">
+                              <ul class="list-unstyled">
+                                  <li>
+                                      <div class="row justify-content-center">
+                                          <button type="submit" class="btn btn-success px-5" style="background-color: #0315ff;">Войти</button>
+                                      </div>
+                                  </li>
+                                  <li>
+                                    <button type="button" class="btn forgot regis mt-1" style="background-color: white;" data-toggle="modal" data-target="#regis">Регистрация</button>
+                                </li>
+                              </ul>
+                          </div>
+                      </form>
+                  </div>
+              </div>
+          </div>
+    </div>
+
+
+    <div class="modal" id="regis">
+          <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                  <div class="modal-header justify-content-md-center my-4">
+                      <h5 class="modal-title">Регистрация</h5>
+                  </div>
+                  <div class="modal-body mx-5 pt-1">
+                      <form  action="{% url 'sign_up' %}" method="post">
+                          {% csrf_token %}
+                          <div class="form-group">
+                              <input name="username" class="form-control ar" placeholder="Имя пользователя">
+                          </div>
+                          <div class="form-group">
+                              <input name="email" type="email" class="form-control ar" placeholder="Почта">
+                          </div>
+                          <div class="form-group">
+                              <input name="password" type="password" class="form-control ar" placeholder="Пароль">
+                          </div>
+                          <div class="form-group">
+                              <input name="check_password" type="password" class="form-control ar" placeholder="Повторите пароль">
+                          </div>
+
+                          <div class="row justify-content-center text-center">
+                              <ul class="list-unstyled">
+                                  <li>
+                                      <div class="row justify-content-center">
+                                          <button type="submit" class="btn btn-success px-5" style="background-color: #0315ff;">Зарегистрироваться</button>
+                                      </div>
+                                  </li>
+                              </ul>
+                          </div>
+                      </form>
+                  </div>
+              </div>
+          </div>
+    </div>
+
+
+</body>
+
+</html>

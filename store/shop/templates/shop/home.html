@@ -1,0 +1,121 @@
+{% extends 'shop/index.html' %}
+{% load static %}
+
+
+{% block news %}
+
+    <div class="welcome_area bg-img background-overlay" style="background-image: url('static/shop/img/bg/cuberpunk.png'); background-size: 55%; background-position: 86% 50%;">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="hero-content">
+                        <h6>Новая коллекция</h6>
+                        <h2>Cyberpunk</h2>
+                        <a href="{% url 'shop' url='cyberpunk' %}" class="btn essence-btn">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block lines %}
+
+    <div class="top_catagory_area section-padding-80 clearfix">
+        <div class="container">
+            <div class="row justify-content-center">
+                {% for l in line %}
+                    <!-- Single Category -->
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url( {{ l.photoProductLine.url }} );">
+                            <div class="catagory-content">
+                                <a href="{% url 'shop' url=l.urlProductLine %}">{{ l.nameProductLine }}</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block sales %}
+
+    <div class="cta-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    {% if sale %}
+                        <div class="cta-content bg-img background-overlay" style="background-image: url( {{ sale.photoProduct.url }}); background-size: 50%; background-position: 0% 50%;">
+                            <div class="h-100 d-flex align-items-center justify-content-end">
+                                <div class="cta--text">
+                                    <h6>-{{ sale.sale }}%</h6>
+                                    <h2>Распродажа</h2>
+                                    <a href="{% url 'shop' url='sale' %}" class="btn essence-btn">Подробнее</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block slider %}
+
+    <section class="new_arrivals_area section-padding-80 clearfix">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-heading text-center">
+                        <h2>Популярное</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="popular-products-slides owl-carousel">
+
+                        {% for top in top %}
+                            <!-- Single Product -->
+                            <div class="single-product-wrapper">
+                                <!-- Product Image -->
+                                <div class="product-img">
+                                    <img src=" {{ top.photoProduct.url }} " alt="">
+                                </div>
+                                <!-- Product Description -->
+                                <div class="product-description">
+                                    <span>{{ top.productLine }}</span>
+                                    <a href="">
+                                        <h6>{{ top.nameProduct }}</h6>
+                                    </a>
+                                    <p class="product-price">{{ top.price }}</p>
+
+                                    <!-- Hover Content -->
+                                    <div class="hover-content">
+                                        <!-- Add to Cart -->
+                                        <div class="add-to-cart-btn">
+                                            <a href="{% url 'detail' slug=top.id %}" class="btn essence-btn">Подробнее</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

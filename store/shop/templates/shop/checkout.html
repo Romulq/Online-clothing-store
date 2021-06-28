@@ -1,0 +1,91 @@
+{% extends 'shop/index.html' %}
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+{% block news %}
+    <div class="breadcumb_area bg-img" style="background-image: url(img/bg-img/breadcumb.jpg);">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="page-title text-center">
+                        <h2>Заказ</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block lines %}
+    <div class="checkout_area section-padding-80">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-12 col-md-6">
+                    <div class="checkout_details_area clearfix">
+
+                        <div class="cart-page-heading mb-30">
+                            <h5>Адресс доставки</h5>
+                        </div>
+
+                        <form id="buyer" action="{% url 'make_order' %}" method="post">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.first_name|as_crispy_field }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    {{ form.last_name|as_crispy_field }}
+                                </div>
+                                <div class="col-12 mb-3">
+                                    {{ form.country_choices|as_crispy_field }}
+                                </div>
+                                <div class="col-12 mb-3">
+                                    {{ form.region|as_crispy_field }}
+                                </div>
+                                <div class="col-12 mb-3">
+                                    {{ form.locality|as_crispy_field }}
+                                </div>
+                                <div class="col-12 mb-3">
+                                    {{ form.postcode|as_crispy_field }}
+                                </div>
+                                <div class="col-12 mb-3">
+                                    {{ form.phone|as_crispy_field }}
+                                </div>
+                                <div class="col-12 mb-4">
+                                    {{ form.email_address|as_crispy_field }}
+                                </div>
+                                <div class="col-12 mb-3">
+                                    {{ form.buying_type|as_crispy_field }}
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-5 ml-lg-auto ">
+                    <div class="order-details-confirmation">
+
+                        <div class="cart-page-heading">
+                            <h5>Ваш заказ</h5>
+                            <p>Детали заказа</p>
+                        </div>
+
+                        <ul class="order-details-form mb-4">
+                            <li><span>Товар</span> <span>Размер</span> <span>Кол-во</span> <span>Цена</span></li>
+                            {% for product in cart.products.all %}
+                                <li><span>{{ product }}</span> <span>{{ product.sizesProduct }}</span> <span>{{ product.qty }}</span> <span>₽{{ product.final_price }}</span></li>
+                            {% endfor %}
+                            <li><strong><span>Итого</span></strong> <strong><span>₽{{ cart.totalPrice }}</span></strong></li>
+                        </ul>
+
+                        <button form="buyer" type="submit" class="btn essence-btn">Подтвердить заказ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
